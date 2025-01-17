@@ -5,7 +5,7 @@ FROM openjdk:11-jdk-slim
 WORKDIR /app
 
 # Copiar el archivo WAR generado por Maven al contenedor
-COPY target/jwt.war /app/jwt.war
+COPY target/jwt-0.0.1-SNAPSHOT.war /app/jwt.war
 
 # Exponer el puerto en el que se ejecuta la aplicación
 EXPOSE 8080
