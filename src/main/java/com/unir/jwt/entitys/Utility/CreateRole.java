@@ -28,9 +28,18 @@ public class CreateRole implements CommandLineRunner {
       Role rolAdmin = new Role(ERole.ROLE_ADMIN);
       Role rolUser = new Role(ERole.ROLE_USER);
       Role rolModerator = new Role(ERole.ROLE_MODERATOR);
+      Role rolSelect = new Role(ERole.ROLE_SELECT);
+      Role rolUpdate = new Role(ERole.ROLE_UPDATE);
+      Role rolCreate = new Role(ERole.ROLE_CREATE);
+      Role rolDelete = new Role(ERole.ROLE_DELETE);
+      
       roleRepository.save(rolAdmin);
       roleRepository.save(rolUser);
       roleRepository.save(rolModerator);
+      roleRepository.save(rolSelect);
+      roleRepository.save(rolUpdate);
+      roleRepository.save(rolCreate);
+      roleRepository.save(rolDelete);
     }
 
     if (userRepository.findAll().size() == 0) {

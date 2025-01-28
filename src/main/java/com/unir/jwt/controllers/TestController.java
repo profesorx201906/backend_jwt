@@ -22,20 +22,22 @@ public class TestController {
   }
 
   @GetMapping("/user")
-  @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
   public String userAccess() {
     return testService.userAccess();
   }
 
   @GetMapping("/mod")
-  @PreAuthorize("hasRole('MODERATOR')")
   public String moderatorAccess() {
     return testService.moderatorAccess();
   }
 
   @GetMapping("/admin")
-  @PreAuthorize("hasRole('ADMIN')")
   public String adminAccess() {
     return testService.adminAccess();
+  }
+
+  @GetMapping("/delete")
+  public String deleteAccess() {
+    return testService.deleteAccess();
   }
 }

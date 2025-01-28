@@ -21,4 +21,9 @@ public class TestService {
         return "Contenido Administrador";
     }
 
+    public String deleteAccess() {
+        return "Contenido para eliminar";
+    }
+
+
 }

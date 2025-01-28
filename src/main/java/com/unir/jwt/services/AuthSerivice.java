@@ -105,6 +105,26 @@ public class AuthSerivice {
                         Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
                                 .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
                         roles.add(modRole);
+                        break;
+                    case "select":
+                        Role selectRole = roleRepository.findByName(ERole.ROLE_SELECT)
+                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+                        roles.add(selectRole);
+                        break;
+                    case "update":
+                        Role updateRole = roleRepository.findByName(ERole.ROLE_UPDATE)
+                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+                        roles.add(updateRole);
+                        break;
+                    case "delete":
+                        Role deleteRole = roleRepository.findByName(ERole.ROLE_DELETE)
+                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+                        roles.add(deleteRole);
+                        break;
+                    case "create":
+                        Role createRole = roleRepository.findByName(ERole.ROLE_CREATE)
+                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+                        roles.add(createRole);
 
                         break;
                     default:
