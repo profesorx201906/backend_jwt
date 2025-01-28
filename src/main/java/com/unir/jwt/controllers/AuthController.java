@@ -14,6 +14,8 @@ import com.unir.jwt.payload.request.LoginRequest;
 import com.unir.jwt.payload.request.SignupRequest;
 import com.unir.jwt.services.AuthSerivice;
 
+import jakarta.validation.Valid;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
