@@ -55,8 +55,7 @@ public class WebSecurityConfig {
             .requestMatchers(new AntPathRequestMatcher("/api/test/delete"))
             .access((authentication, context) -> new AuthorizationDecision(
                 hasRole(authentication.get(), "MODERATOR") &&
-                hasAuthority(authentication.get(), "ROLE_UPDATE")&&
-                hasAuthority(authentication.get(), "ROLE_DELETE")))
+                hasAuthority(authentication.get(), "ROLE_UPDATE")))
             .anyRequest().authenticated());
 
     http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

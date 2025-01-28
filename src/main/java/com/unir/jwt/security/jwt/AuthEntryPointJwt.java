@@ -21,23 +21,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
   private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
-
   @Override
-  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
-      throws IOException, ServletException {
-    logger.error("Error usuario no autorizado: {}", authException.getMessage());
+  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+      //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Credenciales erroneas");
 
-    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-    final Map<String, Object> body = new HashMap<>();
-    body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-    body.put("error", "No autorizado");
-    body.put("message", authException.getMessage());
-    body.put("path", request.getServletPath());
+      final Map<String, Object> error = new HashMap<>();
+      error.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+      error.put("error", "Unauthorized");
+      error.put("message", "Acceso no autorizado al recurso: " + authException.getMessage());
+      error.put("path", request.getServletPath());
 
-    final ObjectMapper mapper = new ObjectMapper();
-    mapper.writeValue(response.getOutputStream(), body);
+      final ObjectMapper mapper = new ObjectMapper();
+      mapper.writeValue(response.getOutputStream(), error);
+
+
   }
 
 }

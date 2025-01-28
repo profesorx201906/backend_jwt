@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.unir.jwt.entitys.Utility.Environment;
@@ -33,20 +34,20 @@ public class JwtUtils {
 
   public String generateJwtToken(Authentication authentication) {
 
-    UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-
-    List<String> roles = userPrincipal.getAuthorities().stream()
-        .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+    UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+        List<String> roles = userPrincipal.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationMs);
-    return Jwts.builder()
-        .subject(userPrincipal.getUsername())
-        .claim("roles", roles)
-        .issuedAt(currentDate)
-        .expiration(expireDate)
-        .signWith(getKey())
-        .compact();
+
+        return Jwts.builder()
+                .subject(userPrincipal.getUsername())
+                .claim("roles", roles)
+                .issuedAt(currentDate)
+                .expiration(expireDate)
+                .signWith(getKey())
+                .compact();
   }
 
   public String getUserNameFromJwtToken(String token) {
