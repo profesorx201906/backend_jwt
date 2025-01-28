@@ -1,53 +1,61 @@
 package com.unir.jwt.security.jwt;
 
+import java.security.Key;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import javax.crypto.SecretKey;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import com.unir.jwt.entitys.Utility.Environment;
 import com.unir.jwt.security.services.UserDetailsImpl;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+
+import io.jsonwebtoken.security.SignatureException;
 
 @Component
 public class JwtUtils {
   private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-  @Value("${unir.app.jwtSecret}")
-  private String jwtSecret;
+  private String jwtSecret = Environment.SECRET_KEY;
 
-  @Value("${unir.app.jwtExpirationMs}")
-  private int jwtExpirationMs;
+  private int jwtExpirationMs = Environment.JWT_EXPIRATION_TIME;
 
   public String generateJwtToken(Authentication authentication) {
 
     UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
     List<String> roles = userPrincipal.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
+        Date currentDate = new Date();
+        Date expireDate = new Date(currentDate.getTime() + jwtExpirationMs);
     return Jwts.builder()
-        .setSubject((userPrincipal.getUsername()))
-        .claim(jwtSecret, roles)
-        .setIssuedAt(new Date())
-        .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-        .signWith(SignatureAlgorithm.HS512, jwtSecret)
+        .subject(userPrincipal.getUsername())
+        .claim("roles", roles)
+        .issuedAt(currentDate)
+        .expiration(expireDate)
+        .signWith(getKey())
         .compact();
   }
 
   public String getUserNameFromJwtToken(String token) {
-    return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    return getClaims(token, Claims::getSubject);
   }
 
   public boolean validateJwtToken(String authToken) {
     try {
-      Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+      Jwts.parser().verifyWith((SecretKey) getKey()).build().parseSignedClaims(authToken).getPayload();
       return true;
     } catch (SignatureException e) {
       logger.error("Firma Invalida para JWT : {}", e.getMessage());
@@ -62,5 +70,18 @@ public class JwtUtils {
     }
 
     return false;
+  }
+
+  public <T> T getClaims(String token, Function<Claims, T> claimsResolver) {
+    return claimsResolver.apply(Jwts.parser()
+        .verifyWith((SecretKey) getKey())
+        .build()
+        .parseSignedClaims(token)
+        .getPayload());
+  }
+
+  public Key getKey() {
+    byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+    return Keys.hmacShaKeyFor(keyBytes);
   }
 }

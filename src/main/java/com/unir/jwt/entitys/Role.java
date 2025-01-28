@@ -1,6 +1,6 @@
 package com.unir.jwt.entitys;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "roles")

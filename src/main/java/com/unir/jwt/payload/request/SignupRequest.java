@@ -1,7 +1,7 @@
 package com.unir.jwt.payload.request;
 
 import java.util.Set;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 public class SignupRequest {
   @NotBlank

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +28,8 @@ import com.unir.jwt.repository.RoleRepository;
 import com.unir.jwt.repository.UserRepository;
 import com.unir.jwt.security.jwt.JwtUtils;
 import com.unir.jwt.security.services.UserDetailsImpl;
+
+import jakarta.validation.Valid;
 
 @Service
 public class AuthSerivice {
